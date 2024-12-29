@@ -17,7 +17,9 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use('/api/v1/user',router)
-
+app.get('/ping',(_req,res)=>{
+    res.send("<h1>Pong</h1>")
+})
 app.all('*',(req,res)=>{
     res.send("OOPS!!! 404 Page not found ")
 })

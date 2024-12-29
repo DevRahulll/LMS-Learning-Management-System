@@ -2,7 +2,6 @@ import app from './app.js'
 import dotenv, { config } from 'dotenv'
 import connToDB from './db/dbConnection.js';
 import cloudinary from "cloudinary"
-import { v2 } from 'cloudinary';
 
 
 dotenv.config({
