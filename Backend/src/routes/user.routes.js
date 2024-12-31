@@ -3,15 +3,15 @@ import { ChangePassword, forgotPassword, getProfile, login, logout, register, re
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.middlewares.js";
 
-const router = express.Router();
+const Userrouter = express.Router();
 
-router.route('/register').post(upload.single("avatar"), register);
-router.route('/login').post(login);
-router.route('/logout').get(logout);
-router.route('/me').get(isLoggedIn, getProfile);
-router.route('/reset').post(forgotPassword);
-router.route('/reset/:resetToken').post(resetPassword);
-router.route('/change-password').post(isLoggedIn, ChangePassword);
-router.route('/update').put(isLoggedIn, upload.single("avatar"), updateUser)
+Userrouter.route('/register').post(upload.single("avatar"), register);
+Userrouter.route('/login').post(login);
+Userrouter.route('/logout').get(logout);
+Userrouter.route('/me').get(isLoggedIn, getProfile);
+Userrouter.route('/reset').post(forgotPassword);
+Userrouter.route('/reset/:resetToken').post(resetPassword);
+Userrouter.route('/change-password').post(isLoggedIn, ChangePassword);
+Userrouter.route('/update').put(isLoggedIn, upload.single("avatar"), updateUser)
 
-export default router;
+export default Userrouter;
