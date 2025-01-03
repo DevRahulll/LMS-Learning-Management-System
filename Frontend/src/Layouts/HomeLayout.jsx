@@ -1,10 +1,20 @@
-import React from 'react'
 import { FiMenu } from 'react-icons/fi'
 import { AiFillCloseCircle } from 'react-icons/ai'
-import { Link } from 'react-router-dom';
-import Footer from '../components/Footer';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
+
+import Footer from '../components/Footer.jsx';
 
 function HomeLayout({ children }) {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // for checking if user is logged in 
+    const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
+
+    //for displaying the options acc to role
+    const role = useSelector((state) => state?.auth?.role);
 
     function changeWidth() {
         const drawerSide = document.getElementsByClassName('drawer-side');
@@ -17,6 +27,15 @@ function HomeLayout({ children }) {
 
         const drawerSide = document.getElementsByClassName('drawer-side');
         drawerSide[0].style.width = 0;
+    }
+
+    function handleLogout(e) {
+        e.preventDefault();
+
+        // const res=await dispatch(logout());
+
+        // if(res?.payload?.success)
+        navigate("/")
     }
 
     return (
@@ -32,18 +51,27 @@ function HomeLayout({ children }) {
                         />
                     </label>
                 </div>
+
                 <div className="drawer-side w-0">
                     <label htmlFor="my-drawer" className='drawer-overlay'>
                     </label>
-                    <ul className="menu p-4 w-48 sm:w-80 bg-base-100 text-base-content relative">
+                    <ul className="menu p-4 h-[100%] w-48 sm:w-80 bg-base-200 text-base-content relative">
                         <li className="w-fit absolute right-2 z-50">
                             <button onClick={hideDrawer}>
                                 <AiFillCloseCircle size={24} />
                             </button>
                         </li>
+
                         <li>
                             <Link to="/">Home</Link>
                         </li>
+
+                        {isLoggedIn && role === 'ADMIN' && (
+                            <li>
+                                <Link to='/admin/dashboard'>Admin DashBoard</Link>
+                            </li>
+                        )}
+
                         <li>
                             <Link to="/courses">All courses</Link>
                         </li>
@@ -53,13 +81,41 @@ function HomeLayout({ children }) {
                         <li>
                             <Link to="/about">About Us</Link>
                         </li>
+
+                        {!isLoggedIn && (
+                            <li className='absolute bottom-4 w-[90%]'>
+                                <div className='w-full flex items-center justify-center'>
+                                    <button className="btn-primary px-4 py-1 font-semibold rounded-md w-full">
+                                        <Link to='/login'>Login</Link>
+                                    </button>
+                                    <button className="btn-secondary px-4 py-1 font-semibold rounded-md w-full">
+                                        <Link to='/login'>Sign up</Link>
+                                    </button>
+                                </div>
+                            </li>
+                        )}
+
+                        {isLoggedIn && (
+                            <li className='absolute bottom-4 w-[90%]'> {/*issue */}
+                                <div className='w-full flex items-center justify-center'>
+                                    <button className="btn-primary px-4 py-1 font-semibold rounded-md w-full">
+                                        <Link to='/user/profile'>Profile</Link>
+                                    </button>
+                                    <button className="btn-secondary px-4 py-1 font-semibold rounded-md w-full">
+                                        <Link onClick={handleLogout}>Logout</Link>
+                                    </button>
+                                </div>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
+
             {children}
+
             <Footer />
-        </div>
-    )
+        </div >
+    );
 }
 
-export default HomeLayout
+export default HomeLayout;
