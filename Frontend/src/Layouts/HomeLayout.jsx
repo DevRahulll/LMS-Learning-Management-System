@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 
 import Footer from '../components/Footer.jsx';
+import { logout } from '../Redux/Slices/AuthSlice.js';
 
 function HomeLayout({ children }) {
 
