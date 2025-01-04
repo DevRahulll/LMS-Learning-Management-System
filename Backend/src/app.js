@@ -6,14 +6,17 @@ import morgan from 'morgan'
 import errorMiddleware from './middlewares/error.middlewares.js';
 import courseRouter from './routes/course.routes.js';
 import paymentRouter from './routes/payment.routes.js';
+import {config} from 'dotenv'
 
 const app = express();
+
+config();
 
 //Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: process.env.FRONTEND_URI || 'http://localhost:5173',
+    origin: [process.env.FRONTEND_URI],
     credentials: true,
 }))
 app.use(cookieParser());
