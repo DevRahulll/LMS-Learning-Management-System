@@ -1,5 +1,5 @@
 import app from './app.js'
-import dotenv, { config } from 'dotenv'
+import dotenv from 'dotenv'
 import connToDB from './db/dbConnection.js';
 import cloudinary from "cloudinary"
 import Razorpay from 'razorpay';

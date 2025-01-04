@@ -13,15 +13,15 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: [process.env.FRONTEND_URI],
-    credentials: true
+    origin: process.env.FRONTEND_URI || 'http://localhost:5173',
+    credentials: true,
 }))
 app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use('/api/v1/user', Userrouter)
 app.use('/api/v1/courses', courseRouter)
-app.use('/api/v1/payments',paymentRouter)
+app.use('/api/v1/payments', paymentRouter)
 app.get('/ping', (_req, res) => {
     res.send("<h1>Pong</h1>")
 })
