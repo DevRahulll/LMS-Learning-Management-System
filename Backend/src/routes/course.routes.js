@@ -6,7 +6,7 @@ import upload from "../middlewares/multer.middlewares.js";
 const courseRouter = express.Router();
 
 courseRouter.route('/')
-    .get(isLoggedIn, getAllCourses)
+    .get(getAllCourses)
     .post(isLoggedIn, authorizedRoles('ADMIN'), upload.single('thumbnail'), createCourse)
 
 courseRouter.route('/:id')
