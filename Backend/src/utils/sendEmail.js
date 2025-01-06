@@ -1,13 +1,16 @@
 import nodemailer from "nodemailer";
+import { config } from 'dotenv'
+
+config();
 
 // async..await is not allowed in global scope, must use a wrapper
-const sendEmail = async function (email, subject, message) { 
-  
+const sendEmail = async function (email, subject, message) {
+
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: false, // true for 465, false for other ports
+    port: Number(process.env.SMTP_PORT),
+    secure:process.env.SMTP_PORT===465 , // true for 465, false for other ports
     auth: {
       user: process.env.SMTP_USERNAME,
       pass: process.env.SMTP_PASSWORD,
@@ -22,5 +25,7 @@ const sendEmail = async function (email, subject, message) {
     html: message, // html body
   });
 };
+console.log(process.env.SMTP_HOST, process.env.SMTP_PORT, process.env.SMTP_USERNAME, process.env.SMTP_PASSWORD, process.env.SMTP_FROM_EMAIL);
+
 
 export default sendEmail;

@@ -7,6 +7,7 @@ import errorMiddleware from './middlewares/error.middlewares.js';
 import courseRouter from './routes/course.routes.js';
 import paymentRouter from './routes/payment.routes.js';
 import {config} from 'dotenv'
+import misRouter from './routes/miscellaneous.routes.js';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 app.use('/api/v1/user', Userrouter)
 app.use('/api/v1/courses', courseRouter)
 app.use('/api/v1/payments', paymentRouter)
+app.use('/api/v1',misRouter)
 app.get('/ping', (_req, res) => {
     res.send("<h1>Pong</h1>")
 })
