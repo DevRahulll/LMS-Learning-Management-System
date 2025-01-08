@@ -53,8 +53,8 @@ function Contact() {
             }
         } catch (error) {
             toast.error("Operation failed");
-            console.log("error in contact page : ",error.response?.data|| error.message);
-        }finally{
+            console.log("error in contact page : ", error.response?.data || error.message);
+        } finally {
             toast.dismiss();
         }
     }
@@ -111,8 +111,8 @@ function Contact() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer">Submit</button>
-
+                        className="w-full bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300 rounded-sm py-2 font-semibold text-lg cursor-pointer"
+                    >Submit</button>
                 </form>
             </div>
         </HomeLayout>

@@ -20,7 +20,7 @@ export const contactUs = async (req, res, next) => {
         const subject = 'Contact Us Form';
         const textMessage = `${name} - ${email} <br/> ${message}`;
 
-        await sendEmail(process.env.CONTACT_US_EMAIL, subject, textMessage);
+        // await sendEmail(process.env.CONTACT_US_EMAIL, subject, textMessage);
 
     } catch (error) {
         return next(
