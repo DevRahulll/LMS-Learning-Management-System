@@ -6,4 +6,4 @@ function CourseDescription() {
   )
 }
 
-export default CourseDescription
+export default CourseDescription;
