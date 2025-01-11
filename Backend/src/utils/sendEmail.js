@@ -25,7 +25,8 @@ const sendEmail = async function (email, subject, message) {
     html: message, // html body
   });
 };
-console.log(process.env.SMTP_HOST, process.env.SMTP_PORT, process.env.SMTP_USERNAME, process.env.SMTP_PASSWORD, process.env.SMTP_FROM_EMAIL);
+
+// console.log(process.env.SMTP_HOST, process.env.SMTP_PORT, process.env.SMTP_USERNAME, process.env.SMTP_PASSWORD, process.env.SMTP_FROM_EMAIL);
 
 
 export default sendEmail;
