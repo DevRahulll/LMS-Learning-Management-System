@@ -261,7 +261,7 @@ export const ChangePassword = async (req, res,next) => {
 
 export const updateUser = async (req, res,next) => {
     const { fullName } = req.body;
-    const { id } = req.user;
+    const { id } = req.params;
 
     const user = await User.findById(id);
 
@@ -295,7 +295,7 @@ export const updateUser = async (req, res,next) => {
             }
         } catch (error) {
             return next(
-                new AppError(error || 'File not uploaded, please try again ', 500)
+                new AppError(error || 'File not uploaded, please try again ', 400)
             )
         }
     }

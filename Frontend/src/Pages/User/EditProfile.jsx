@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux";
 import { getUserData, updateProfile } from "../../Redux/Slices/AuthSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { BsPersonCircle } from "react-icons/bs"
-import { toast } from "react-hot-toast"
+import { BsPersonCircle } from "react-icons/bs";
+import { toast } from "react-hot-toast";
 import HomeLayout from "../../Layouts/HomeLayout";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 
@@ -12,6 +12,7 @@ function EditProfile() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [data, setData] = useState({
         previewImage: "",
         fullName: "",
@@ -45,17 +46,20 @@ function EditProfile() {
 
     async function onFormSubmit(e) {
         e.preventDefault();
-        console.log(data); // checking 
+        // console.log(data); // checking 
         if (!data.fullName || !data.avatar) {
             toast.error("All fields are mandatory");
             return;
         }
         if (data.fullName.length < 4) {
             toast.error("Name cannot be less than 4 characters")
+            return ;
         }
         const formData = new FormData();
         formData.append("fullName", data.fullName);
         formData.append("avatar", data.avatar);
+        // console.log(formData.entries().next());
+        // console.log(formData.entries().next());
 
         await dispatch(updateProfile([data.userId, formData]));
 
@@ -119,4 +123,6 @@ function EditProfile() {
     )
 }
 
-export default EditProfile
+export default EditProfile;
+
+// error while navigating to profile page the image is gettting updated but the fullName is not getting updated
