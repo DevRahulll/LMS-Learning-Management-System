@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import toast from "react-hot-toast"
+import { toast } from "react-hot-toast"
 import axiosInstance from "../../Helpers/axiosInstance"
 
 const initialState = {
@@ -61,17 +61,15 @@ export const getPaymentRecord = createAsyncThunk("/payments/record", async () =>
     }
 });
 
-export const cancelSubscription = createAsyncThunk("/payments/cancel", async () => {
+export const cancelCourseBundle = createAsyncThunk("/cancelCourse", async () => {
     try {
         const response = await axiosInstance.post("/payments/unsubscribe");
 
         toast.promise(response, {
             laoding: "Unscribing...",
-            success: (data) => {
-                return data?.data?.message
-            }
-        })
-        error: "Failed to Unscribe"
+            success: "Bundle unsubscribed successfully",
+            error: "Failed to Unscribe"
+        });
 
         return (await response).data
 
