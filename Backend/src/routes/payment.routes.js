@@ -8,6 +8,6 @@ paymentRouter.route('/razorpay-key').get(isLoggedIn, getRazorPayApiKey);
 paymentRouter.route('/subscribe').post(isLoggedIn, buySubscription)
 paymentRouter.route('/verify').post(isLoggedIn, verifySubscription)
 paymentRouter.route('/unsubscribe').post(isLoggedIn, cancelSubscription)
-paymentRouter.route('/payments').get(isLoggedIn, authorizedRoles('ADMIN'), allPayment)
+paymentRouter.route('/').get(isLoggedIn, authorizedRoles('ADMIN'), allPayment)
 
 export default paymentRouter;

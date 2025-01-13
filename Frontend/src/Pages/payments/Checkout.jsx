@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { BiRupee } from "react-icons/bi"
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-hot-toast"
 import { getRazorPayId, purchasedCourseBundle, verifyUserPayment } from '../../Redux/Slices/RazorpaySlice';
 import HomeLayout from '../../Layouts/HomeLayout';
 
@@ -10,7 +11,7 @@ function Checkout() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const razorpayKey = useSelector((state) => state?.razorpay?.key)
-    const subcription_id = useSelector((state) => state?.razorpay?.subcription_id)
+    const subcription_id = useSelector((state) => state?.razorpay?.subscription_id)
     // const userData = useSelector((state) => state?.auth?.data)
     const paymentDetails = {
         razorpay_payment_id: "",
@@ -18,10 +19,12 @@ function Checkout() {
         razorpay_signature: ""
     }
 
+    console.log("Subscription ID(checkout) : ",useSelector((state) => state?.razorpay));
+
     async function handleSubscription(e) {
         e.preventDefault();
-        if (!razorpayKey || !subcription_id) {
-            toast.error("Something went wrong");
+        if (!razorpayKey || !subcription_id) {  //here in the subscription id
+            toast.error("Something went wrong ");
             return;
         }
         const options = {
@@ -33,8 +36,6 @@ function Checkout() {
                 color: '#f37254'
             },
             // prefill: {  // it used to prefill the data in razorpay for good ux experience
-            //     email: userData.email,
-            //     name: userData.fullName
             // },
             handler: async function (response) {
                 paymentDetails.razorpay_payment_id = response.razorpay_payment_id;
@@ -98,4 +99,3 @@ function Checkout() {
 export default Checkout;
 
 
-// full error in this page

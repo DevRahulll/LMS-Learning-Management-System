@@ -5,9 +5,7 @@ import AppError from "../utils/error.utils.js";
 import crypto from 'crypto'
 
 
-
-
-export const getRazorPayApiKey = async (req, res, next) => {
+export const getRazorPayApiKey = async (_req, res, next) => {
     try {
         res.status(200).json({
             success: true,
@@ -27,7 +25,7 @@ export const buySubscription = async (req, res, next) => {
         const user = await User.findById(id);
         if (!user) {
             return next(
-                new AppError('Unauthorized , please Login!!', 500)
+                new AppError('Unauthorized , please Login!!')
             )
         }
 
@@ -36,10 +34,16 @@ export const buySubscription = async (req, res, next) => {
                 new AppError('Admin cannot purchased a subscription ', 400)
             )
         }
-
+        const planId=process.env.RAZORPAY_PLAN_ID;
+        if(!planId){
+            return next(
+                new AppError('Razorpay plan id is not configured ', 500)
+            )
+        }
         const subscription = await razorpay.subscriptions.create({
-            plan_id: process.env.RAZORPAY_PLAN_ID,
-            customer_notify: 1
+            plan_id: planId,
+            customer_notify: 1, // 1 means razorpay will handle notifying the customer, 0 means we will not notify the customer
+            total_count: 12,// 12 means it will charge every month for a 1-year sub.
         });
 
         user.subscription.id = subscription.id;
@@ -79,7 +83,7 @@ export const verifySubscription = async (req, res, next) => {
 
         if (generatedSignature !== razorpay_signature) {
             return next(
-                new AppError('Payment not verified , please try again later', 500)
+                new AppError('Payment not verified , please try again later', 400)
             )
         }
 
@@ -104,7 +108,7 @@ export const verifySubscription = async (req, res, next) => {
 
 
 }
-export const cancelSubscription = async (req, res, next) => {
+export const cancelSubscription = async (req, _res, next) => {
     try {
         const { id } = req.user;
 
@@ -118,7 +122,7 @@ export const cancelSubscription = async (req, res, next) => {
 
         if (user.role === 'ADMIN') {
             return next(
-                new AppError('Admin cannot purchase a subscription ', 400)
+                new AppError('Admin cannot cancel a subscription ', 400)
             )
         }
 
@@ -136,18 +140,61 @@ export const cancelSubscription = async (req, res, next) => {
         )
     }
 }
+
 export const allPayment = async (req, res, next) => {
     try {
-        const { count } = req.query;
+        const { count, skip } = req.query;
 
-        const subscription = await razorpay.subscriptions.all({
-            count: count || 10,
+        const allPayments = await razorpay.subscriptions.all({
+            count: count ? count : 10,
+            skip: skip ? skip : 0,
+        });
+
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
+        ];
+
+        const finalMonths = {
+            January: 0,
+            February: 0,
+            March: 0,
+            April: 0,
+            May: 0,
+            June: 0,
+            July: 0,
+            August: 0,
+            September: 0,
+            October: 0,
+            November: 0,
+            December: 0,
+        };
+
+        const monthlyWisePayments = allPayments.items.map((payment) => {
+            const monthsInNumbers = new Date(payment.start_at * 1000);
+
+            return monthNames[monthsInNumbers.getMonth()];
+        })
+
+        monthlyWisePayments.map((month) => {
+            Object.keys(finalMonths).forEach((objMonth) => {
+                if (month === objMonth) {
+                    finalMonths[month] += 1;
+                }
+            });
+        });
+
+        const monthlySalesRecord = [];
+
+        Object.keys(finalMonths).forEach((monthName) => {
+            monthlySalesRecord.push(finalMonths[monthName]);
         });
 
         res.status(200).json({
             success: true,
             message: 'All payments are : ',
-            subscription
+            allPayments,
+            finalMonths,
+            monthlySalesRecord
         })
     } catch (error) {
         return next(

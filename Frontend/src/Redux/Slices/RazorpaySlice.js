@@ -14,6 +14,7 @@ const initialState = {
 export const getRazorPayId = createAsyncThunk("/razorpay/getId", async () => {
     try {
         const res = await axiosInstance.get("/payments/razorpay-key");
+        // console.log("Response : ", res);
         return res.data;
     } catch (error) {
         toast.error("Failed to load Data")
@@ -22,7 +23,8 @@ export const getRazorPayId = createAsyncThunk("/razorpay/getId", async () => {
 
 export const purchasedCourseBundle = createAsyncThunk("/purchaseCourse", async () => {
     try {
-        const response = await axiosInstance.post("payments/subscribe");
+        const response = await axiosInstance.post("/payments/subscribe");
+        console.log("Bundle Response:", response.data);
         return response.data
     } catch (error) {
         toast.error(error?.response?.data?.message)
@@ -87,9 +89,11 @@ const razorpaySlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getRazorPayId.fulfilled, (state, action) => {
+                console.log("State: ", action.payload);
                 state.key = action?.payload?.key;
             })
             .addCase(purchasedCourseBundle.fulfilled, (state, action) => {
+                console.log("State :  ", action.payload.subscription_id);
                 state.subscription_id = action?.payload?.subscription_id
             })
             .addCase(verifyUserPayment.fulfilled, (state, action) => {

@@ -276,7 +276,8 @@ export const updateUser = async (req, res,next) => {
     }
 
     if (req.file) {
-        await cloudinary.v2.uploader.destroy(user.avatar.public_id)
+        await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+        
         try {
             const result = await cloudinary.v2.uploader.upload(req.file.path, {
                 folder: 'lms',
