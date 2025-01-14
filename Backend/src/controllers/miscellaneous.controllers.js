@@ -1,7 +1,7 @@
 import User from "../models/user.models.js";
 import AppError from "../utils/error.utils.js";
 import sendEmail from "../utils/sendEmail.js";
-import {config} from 'dotenv'
+import { config } from 'dotenv'
 
 config();
 
@@ -24,7 +24,7 @@ export const contactUs = async (req, res, next) => {
 
     } catch (error) {
         return next(
-            new AppError("Error in sending contact us email ",error.message, 400)
+            new AppError("Error in sending contact us email ", error.message, 400)
         )
     }
 
@@ -44,6 +44,8 @@ export const userStats = async (req, res, next) => {
         'subscription.status': 'active',
     });
 
+    // console.log(allUseraccount, subscribedUsersCount);
+    
     res.status(200).json({
         success: true,
         message: "All registered users count",

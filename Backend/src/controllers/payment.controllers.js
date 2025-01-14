@@ -188,6 +188,7 @@ export const allPayment = async (req, res, next) => {
         Object.keys(finalMonths).forEach((monthName) => {
             monthlySalesRecord.push(finalMonths[monthName]);
         });
+        // console.log(allPayments,finalMonths,monthlySalesRecord);
 
         res.status(200).json({
             success: true,
