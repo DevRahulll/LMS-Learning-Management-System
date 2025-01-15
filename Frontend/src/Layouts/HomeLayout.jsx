@@ -91,12 +91,12 @@ function HomeLayout({ children }) {
                         {!isLoggedIn && (
                             <li className='absolute bottom-4 w-[90%]'>
                                 <div className='w-full flex gap-4 items-center justify-center'>
-                                    <button className="btn btn-primary text-[18px] px-4 py-1 font-semibold rounded-md w-[50%]"
+                                    <button className="btn btn-primary text-[16px] px-4 py-1 font-semibold rounded-md w-[50%]"
                                         onClick={() => navigate('/login')}
                                     >
                                         Login
                                     </button>
-                                    <button className="btn btn-secondary text-[18px] px-4 py-1 font-semibold rounded-md w-[50%]"
+                                    <button className="btn btn-secondary text-[16px] px-4 py-1 font-semibold rounded-md w-[50%]"
                                         onClick={() => navigate('/signup')}
                                     >
                                         Sign up
@@ -108,11 +108,11 @@ function HomeLayout({ children }) {
                         {isLoggedIn && (
                             <li className='absolute bottom-4 w-[90%]'>
                                 <div className='w-full flex items-center justify-center'>
-                                    <button className="btn btn-primary text-[18px] px-4 py-1 font-semibold rounded-md w-[50%]"
+                                    <button className="btn btn-primary text-[16px] px-4 py-1 font-semibold rounded-md w-[50%]"
                                         onClick={() => navigate('/user/profile')}>
                                         Profile
                                     </button>
-                                    <button className="btn btn-secondary text-[18px] px-4 py-1 font-semibold rounded-md w-[50%]"
+                                    <button className="btn btn-secondary text-[16px] px-4 py-1 font-semibold rounded-md w-[50%]"
                                         onClick={handleLogout}>
                                         Logout
                                     </button>

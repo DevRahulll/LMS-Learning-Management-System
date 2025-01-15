@@ -1,5 +1,6 @@
 import React from 'react'
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter } from 'react-icons/bs';
+import { FaGithub } from "react-icons/fa";
 
 function Footer() {
 
@@ -13,16 +14,13 @@ function Footer() {
                     Copyright {year} | All rights reserved
                 </section>
                 <section className="flex items-center justify-center gap-5 text-2xl text-white">
-                    <a className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="">
-                        <BsFacebook />
+                    <a target='_blank' className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="https://github.com/devrahulll">
+                        <FaGithub />
                     </a>
-                    <a className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="">
-                        <BsInstagram />
-                    </a>
-                    <a className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="">
+                    <a target='_blank' className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="https://www.linkedin.com/in/devrahulll/">
                         <BsLinkedin />
                     </a>
-                    <a className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="">
+                    <a target='_blank' className='hover:text-yellow-500 transition-all ease-in-out duration-300' href="https://x.com/RahulDe13551305">
                         <BsTwitter />
                     </a>
                 </section>
