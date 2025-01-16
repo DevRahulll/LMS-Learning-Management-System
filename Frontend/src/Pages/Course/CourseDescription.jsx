@@ -16,7 +16,7 @@ function CourseDescription() {
         <div className="grid grid-cols-2 gap-10 py-10 relative">
           <div className="space-y-5">
             <img
-              className='w-full h-64'
+              className='w-[360px] h-[328px] ml-40'
               src={state?.thumbnail?.secure_url}
               alt="thumbnail"
             />

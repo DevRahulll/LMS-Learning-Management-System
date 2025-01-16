@@ -46,20 +46,20 @@ function EditProfile() {
 
     async function onFormSubmit(e) {
         e.preventDefault();
-        console.log("DAtA" ,data); // checking 
+        console.log("DAtA", data); // checking 
         if (!data.fullName || !data.avatar) {
             toast.error("All fields are mandatory");
             return;
         }
         if (data.fullName.length < 4) {
             toast.error("Name cannot be less than 4 characters")
-            return ;
+            return;
         }
         const formData = new FormData();
         formData.append("fullName", data.fullName);
         formData.append("avatar", data.avatar);
-        console.log("formData : ",formData.entries().next());
-        console.log("formData : ",formData.entries().next());
+        console.log("formData : ", formData.entries().next());
+        console.log("formData : ", formData.entries().next());
 
         await dispatch(updateProfile([data.userId, formData]));
 
@@ -75,7 +75,8 @@ function EditProfile() {
                 <form noValidate onSubmit={onFormSubmit} className="flex flex-col justify-center gap-5 rounded-lg p-4 text-white w-80 min-h-[26rem] shadow-[0_0_10px_black]">
                     <h1 className="text-center text-2xl font-semibold">Edit Profile</h1>
 
-                    <label htmlFor="image_uploads"
+                    <label
+                        htmlFor="image_uploads"
                         className="cursor-pointer"
                     >
                         {data.previewImage ?
@@ -114,7 +115,8 @@ function EditProfile() {
                     </button>
                     <Link to="/user/profile">
                         <p className="link text-accent cursor-pointer flex items-center justify-center w-full gap-2">
-                            <AiOutlineArrowLeft /> Go Back to profile
+                            <AiOutlineArrowLeft />
+                            Go Back to profile
                         </p>
                     </Link>
                 </form>
@@ -124,5 +126,3 @@ function EditProfile() {
 }
 
 export default EditProfile;
-
-// error while navigating to profile page the image is gettting updated but the fullName is not getting updated

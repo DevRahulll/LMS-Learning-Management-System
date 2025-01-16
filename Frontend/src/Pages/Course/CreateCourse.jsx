@@ -159,7 +159,7 @@ function CreateCourse() {
                                 <label htmlFor="description" className="text-lg font-semibold">
                                     Course Description
                                 </label>
-                                <input
+                                <textarea
                                     required
                                     type='text'
                                     name='description'
