@@ -19,18 +19,19 @@ function Checkout() {
         razorpay_signature: ""
     }
 
-    console.log("Subscription ID(checkout) : ",useSelector((state) => state?.razorpay));
+    console.log(" Subscription ID : ", useSelector((state) => state?.razorpay));
 
     async function handleSubscription(e) {
         e.preventDefault();
-        if (!razorpayKey || !subcription_id) {  //here in the subscription id
+        if (!razorpayKey || !subcription_id) {  // here in the subscription id
             toast.error("Something went wrong ");
             return;
         }
+
         const options = {
             key: razorpayKey,
             subcription_id: subcription_id,
-            name: "Coursify PVT. LTD.",
+            name: "DEV PVT. LTD.",
             description: "Subscription",
             theme: {
                 color: '#f37254'
@@ -61,6 +62,7 @@ function Checkout() {
     useEffect(() => {
         load();
     }, [])
+
     return (
         <HomeLayout>
             <form

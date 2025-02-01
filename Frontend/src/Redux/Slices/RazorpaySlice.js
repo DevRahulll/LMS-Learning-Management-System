@@ -25,6 +25,7 @@ export const purchasedCourseBundle = createAsyncThunk("/purchaseCourse", async (
     try {
         const response = await axiosInstance.post("/payments/subscribe");
         console.log("Bundle Response:", response.data);
+        console.log("REsponse : ", data);
         return response.data
     } catch (error) {
         toast.error(error?.response?.data?.message)
@@ -89,7 +90,7 @@ const razorpaySlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getRazorPayId.fulfilled, (state, action) => {
-                console.log("State: ", action.payload);
+                // console.log("State: ", action.payload);
                 state.key = action?.payload?.key;
             })
             .addCase(purchasedCourseBundle.fulfilled, (state, action) => {

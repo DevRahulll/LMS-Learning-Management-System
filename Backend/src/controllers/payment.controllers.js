@@ -25,7 +25,7 @@ export const buySubscription = async (req, res, next) => {
         const user = await User.findById(id);
         if (!user) {
             return next(
-                new AppError('Unauthorized , please Login!!')
+                new AppError('Unauthorized , please Login!!', 401)
             )
         }
 
@@ -34,8 +34,8 @@ export const buySubscription = async (req, res, next) => {
                 new AppError('Admin cannot purchased a subscription ', 400)
             )
         }
-        const planId=process.env.RAZORPAY_PLAN_ID;
-        if(!planId){
+        const planId = process.env.RAZORPAY_PLAN_ID;
+        if (!planId) {
             return next(
                 new AppError('Razorpay plan id is not configured ', 500)
             )
@@ -70,7 +70,7 @@ export const verifySubscription = async (req, res, next) => {
         const user = await User.findById(id);
         if (!user) {
             return next(
-                new AppError('Unauthorized , please Login !')
+                new AppError('Unauthorized , please Login !', 401)
             )
         }
 
@@ -78,7 +78,7 @@ export const verifySubscription = async (req, res, next) => {
 
         const generatedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_SECRET)
-            .update(`${razorpay_payment_id}|${subscriptionId}`)
+            .update(`${subscriptionId}|${razorpay_payment_id}`)
             .digest('hex')
 
         if (generatedSignature !== razorpay_signature) {
@@ -108,7 +108,7 @@ export const verifySubscription = async (req, res, next) => {
 
 
 }
-export const cancelSubscription = async (req, _res, next) => {
+export const cancelSubscription = async (req, res, next) => {
     try {
         const { id } = req.user;
 
@@ -134,6 +134,11 @@ export const cancelSubscription = async (req, _res, next) => {
 
         await user.save();
 
+        res.status(200).json({
+            success: true,
+            message: "Subscription cnaceled successfully!"
+        })
+
     } catch (error) {
         return next(
             new AppError(error.message, 500)
@@ -143,7 +148,8 @@ export const cancelSubscription = async (req, _res, next) => {
 
 export const allPayment = async (req, res, next) => {
     try {
-        const { count, skip } = req.query;
+        const count = req.query.count ? parseInt(req.query.count, 10) : 10;
+        const skip = req.query.skip ? parseInt(req.query.skip, 10) : 0;
 
         const allPayments = await razorpay.subscriptions.all({
             count: count ? count : 10,

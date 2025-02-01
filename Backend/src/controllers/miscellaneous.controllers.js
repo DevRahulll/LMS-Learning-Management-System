@@ -20,9 +20,10 @@ export const contactUs = async (req, res, next) => {
         const subject = 'Contact Us Form';
         const textMessage = `${name} - ${email} <br/> ${message}`;
 
-        // await sendEmail(process.env.CONTACT_US_EMAIL, subject, textMessage);
+        await sendEmail(process.env.CONTACT_US_EMAIL, subject, textMessage);
 
     } catch (error) {
+        console.error("Error in contactus:",error)
         return next(
             new AppError("Error in sending contact us email ", error.message, 400)
         )
@@ -37,6 +38,12 @@ export const contactUs = async (req, res, next) => {
 
 // Admin only
 export const userStats = async (req, res, next) => {
+
+    if(!req.user||req.user.role!=='ADMIN'){
+        return next(
+            new AppError("Access Denied! Admins only. ",403)
+        )
+    }
 
     const allUseraccount = await User.countDocuments();
 
