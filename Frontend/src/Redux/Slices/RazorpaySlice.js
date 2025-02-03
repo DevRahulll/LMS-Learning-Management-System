@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { toast } from "react-hot-toast"
 import axiosInstance from "../../Helpers/axiosInstance"
+import axios from "axios";
 
 const initialState = {
     key: "",
@@ -14,18 +15,16 @@ const initialState = {
 export const getRazorPayId = createAsyncThunk("/razorpay/getId", async () => {
     try {
         const res = await axiosInstance.get("/payments/razorpay-key");
-        // console.log("Response : ", res);
         return res.data;
     } catch (error) {
         toast.error("Failed to load Data")
     }
 });
 
-export const purchasedCourseBundle = createAsyncThunk("/purchaseCourse", async () => {
+export const purchasedCourseBundle = createAsyncThunk("/payments/purchaseCourse", async () => {
     try {
         const response = await axiosInstance.post("/payments/subscribe");
-        console.log("Bundle Response:", response.data);
-        console.log("REsponse : ", data);
+        console.log("Reponse : ", response);
         return response.data
     } catch (error) {
         toast.error(error?.response?.data?.message)
@@ -90,12 +89,11 @@ const razorpaySlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getRazorPayId.fulfilled, (state, action) => {
-                // console.log("State: ", action.payload);
                 state.key = action?.payload?.key;
             })
             .addCase(purchasedCourseBundle.fulfilled, (state, action) => {
                 console.log("State :  ", action.payload.subscription_id);
-                state.subscription_id = action?.payload?.subscription_id
+                state.subscription_id = action?.payload?.subscription_id;
             })
             .addCase(verifyUserPayment.fulfilled, (state, action) => {
                 toast.success(action?.payload?.message)

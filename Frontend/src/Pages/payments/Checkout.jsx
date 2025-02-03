@@ -12,14 +12,11 @@ function Checkout() {
     const navigate = useNavigate();
     const razorpayKey = useSelector((state) => state?.razorpay?.key)
     const subcription_id = useSelector((state) => state?.razorpay?.subscription_id)
-    // const userData = useSelector((state) => state?.auth?.data)
     const paymentDetails = {
         razorpay_payment_id: "",
         razorpay_subscription_id: "",
         razorpay_signature: ""
     }
-
-    console.log(" Subscription ID : ", useSelector((state) => state?.razorpay));
 
     async function handleSubscription(e) {
         e.preventDefault();
@@ -56,7 +53,7 @@ function Checkout() {
 
     async function load() {
         await dispatch(getRazorPayId());
-        await dispatch(purchasedCourseBundle)
+        await dispatch(purchasedCourseBundle());
     }
 
     useEffect(() => {
