@@ -64,9 +64,20 @@ export const buySubscription = async (req, res, next) => {
 }
 export const verifySubscription = async (req, res, next) => {
     try {
+
+        
         const { id } = req.user;
         const { razorpay_payment_id, razorpay_signature, razorpay_subscription_id } = req.body;
 
+        if (!razorpay_payment_id || !razorpay_subscription_id || !razorpay_signature) {
+            
+            return res.status(401).json({
+                success: false,
+                message: "Invalid payment details|| all fields are mandatory"
+            });
+        }
+
+        
         const user = await User.findById(id);
         if (!user) {
             return next(
@@ -74,33 +85,41 @@ export const verifySubscription = async (req, res, next) => {
             )
         }
 
-        const subscriptionId = user.subscription.id;
-
+        
         const generatedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_SECRET)
-            .update(`${subscriptionId}|${razorpay_payment_id}`)
+            .update(`${razorpay_payment_id}|${razorpay_subscription_id}`)
             .digest('hex')
 
+        
         if (generatedSignature !== razorpay_signature) {
-            return next(
-                new AppError('Payment not verified , please try again later', 400)
-            )
+            if (generatedSignature !== razorpay_signature) {
+                
+                return next(
+                    new AppError('Payment not verified , please try again later', 400)
+                )
+            }
         }
-
+        
         await Payment.create({
             razorpay_payment_id,
             razorpay_signature,
             razorpay_subscription_id
         });
-
+        
+        user.subscription.id = razorpay_subscription_id;
         user.subscription.status = 'active';
         await user.save();
 
-        res.status(200).json({
+        const response = {
             success: true,
-            message: 'Payment verified successfully !!!'
-        })
+            message: 'Payment verified successfully'
+        }
+        
+        return res.status(200).json(response)
+
     } catch (error) {
+        console.log("error in verification ", error);
         return next(
             new AppError(error.message, 500)
         )
@@ -108,6 +127,8 @@ export const verifySubscription = async (req, res, next) => {
 
 
 }
+
+
 export const cancelSubscription = async (req, res, next) => {
     try {
         const { id } = req.user;
@@ -156,6 +177,8 @@ export const allPayment = async (req, res, next) => {
             skip: skip ? skip : 0,
         });
 
+        // console.log("Razorpay Api response : ",allPayments); // debug
+
         const monthNames = [
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
         ];
@@ -189,21 +212,17 @@ export const allPayment = async (req, res, next) => {
             });
         });
 
-        const monthlySalesRecord = [];
-
-        Object.keys(finalMonths).forEach((monthName) => {
-            monthlySalesRecord.push(finalMonths[monthName]);
-        });
-        // console.log(allPayments,finalMonths,monthlySalesRecord);
+        const monthlySalesRecord = Object.values(finalMonths);
 
         res.status(200).json({
             success: true,
-            message: 'All payments are : ',
+            message: 'All payments are',
             allPayments,
             finalMonths,
             monthlySalesRecord
         })
     } catch (error) {
+        console.log("Error in allPayments ",error);
         return next(
             new AppError(error.message, 500)
         )

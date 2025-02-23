@@ -122,7 +122,7 @@ function Signup() {
                     />
 
                     <div className="flex flex-col gap-1">
-                        <label htmlFor="fullName" className="font-semibold">FullName</label>
+                        <label htmlFor="fullName" className="font-semibold">Full-Name</label>
                         <input
                             className="bg-transparent px-2 py-1 border rounded-md"
                             type="text"

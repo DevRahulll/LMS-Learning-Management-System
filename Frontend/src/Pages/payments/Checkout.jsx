@@ -11,7 +11,9 @@ function Checkout() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const razorpayKey = useSelector((state) => state?.razorpay?.key)
-    const subcription_id = useSelector((state) => state?.razorpay?.subscription_id)
+    const subscription_id = useSelector((state) => state?.razorpay?.subscription_id)
+
+
     const paymentDetails = {
         razorpay_payment_id: "",
         razorpay_subscription_id: "",
@@ -20,14 +22,14 @@ function Checkout() {
 
     async function handleSubscription(e) {
         e.preventDefault();
-        if (!razorpayKey || !subcription_id) {  // here in the subscription id
+        if (!razorpayKey || !subscription_id) {
             toast.error("Something went wrong ");
             return;
         }
 
         const options = {
             key: razorpayKey,
-            subcription_id: subcription_id,
+            subscription_id: subscription_id,
             name: "DEV PVT. LTD.",
             description: "Subscription",
             theme: {
@@ -36,15 +38,38 @@ function Checkout() {
             // prefill: {  // it used to prefill the data in razorpay for good ux experience
             // },
             handler: async function (response) {
+                
+
+                if (!response.razorpay_payment_id || !response.razorpay_signature || !response.razorpay_subscription_id) {
+                    console.error("Invalid Razorpay response:", response); // Debugging
+                    toast.error("Invalid payment response. Please try again.");
+                    return;
+                }
+
+
                 paymentDetails.razorpay_payment_id = response.razorpay_payment_id;
                 paymentDetails.razorpay_signature = response.razorpay_signature;
                 paymentDetails.razorpay_subscription_id = response.razorpay_subscription_id;
 
-                toast.success("Payment Successfull");
-
+                console.log("Payment Details send to backend:", paymentDetails); 
                 const res = await dispatch(verifyUserPayment(paymentDetails));
-                (res?.payload?.success) ? navigate("/checkout/sucess") : navigate("/checkout/fail");
+                
+
+                if (res?.payload?.success) {
+                    toast.success("Payment verified Successfull");
+                    navigate('/checkout/success')
+                } else {
+                    toast.error("Payment Verification failed");
+                    navigate('/checkout/fail')
+                }
+
+            },
+            modal: {
+                ondismiss: function () {
+                    toast.error("Payment was not completed. Please try again.");
+                }
             }
+
         }
 
         const paymentObject = new window.Razorpay(options);

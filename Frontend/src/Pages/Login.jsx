@@ -87,7 +87,7 @@ function Login() {
                     </button>
 
                     <p className="text-center">
-                        Do not have an account?<Link to="/signup" className="link text-accent cursor-pointer">Login</Link>
+                        Do not have an account?<Link to="/signup" className="link text-accent cursor-pointer">Register</Link>
                     </p>
 
                 </form>

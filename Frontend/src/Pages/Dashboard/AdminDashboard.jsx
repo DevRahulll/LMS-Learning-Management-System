@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import HomeLayout from '../../Layouts/HomeLayout'
-import { Chart as ChartJs, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from "chart.js"
+import { Chart as ChartJs, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, plugins } from "chart.js"
 import { Bar, Pie } from "react-chartjs-2"
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +19,8 @@ function AdminDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { allUsersCount, subscribeCount } = useSelector((state) => state.stat);
+  const { allUseraccount, subscribedUsersCount } = useSelector((state) => state.stat);
+  console.log("Redux state: ",{allUseraccount, subscribedUsersCount });
   const { allPayments, monthlySalesRecord } = useSelector((state) => state.razorpay);
 
   const userData = {
@@ -28,13 +29,15 @@ function AdminDashboard() {
       {
         label: "User Details",
         fontColor: "white",
-        data: [allUsersCount, subscribeCount],
+        data: [allUseraccount||0, subscribedUsersCount||0],
         backgroundColor: ["yellow", "green"],
         borderWidth: 1,
         borderColor: ["yellow", "green"]
       }
     ]
   };
+
+  console.log("User data",userData); //debug
 
   const SalesData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dev"],
@@ -50,6 +53,23 @@ function AdminDashboard() {
     ]
   };
 
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          color: "white", // Ensure legend labels are visible
+        },
+      },
+      title: {
+        display: true,
+        text: "User Statistics",
+        color: "white", // Ensure title is visible
+      },
+    },
+  };
+
   const myCourses = useSelector((state) => state?.course?.courseData);
 
   async function onCourseDelete(id) {
@@ -62,7 +82,6 @@ function AdminDashboard() {
     }
   }
 
-
   useEffect(() => {
     (
       async () => {
@@ -70,33 +89,35 @@ function AdminDashboard() {
         await dispatch(getStatsData());
         await dispatch(getPaymentRecord());
       }
-    )()
+    )();
   }, [])
 
   return (
     <HomeLayout>
       <div className="min-h-[90vh] pt-5 flex flex-col flex-wrap gap-10 text-white">
-        <h1 className='text-center text-5xl font-semibold text-yellow-500'>Admin Dashboard</h1>
+        <h1 className='text-center text-5xl font-semibold text-yellow-500'>
+          Admin Dashboard
+          </h1>
 
         <div className="grid grid-cols-2 m-auto mx-10">
           <div className="flex flex-col items-center gap-10 p-5 shadow-lg rounded-md">
 
             <div className="w-80 h-80">
-              <Pie data={userData} />
+              <Pie data={userData}/>
             </div>
             <div className="grid grid-cols-2 gap-5">
 
               <div className="flex items-center justify-between p-5 gap-5 rounded-md shadow-md">
                 <div className="flex flex-col items-center">
                   <p className='font-semibold'>Registered Users</p>
-                  <h3 className='text-4xl font-bold'>{allUsersCount}</h3>
+                  <h3 className='text-4xl font-bold'>{allUseraccount}</h3>
                 </div>
                 <FaUsers className="text-yellow-500 text-5xl" />
               </div>
               <div className="flex items-center justify-between p-5 gap-5 rounded-md shadow-md">
                 <div className="flex flex-col items-center">
                   <p className='font-semibold'>Subscribed Users</p>
-                  <h3 className='text-4xl font-bold'>{subscribeCount}</h3>
+                  <h3 className='text-4xl font-bold'>{subscribedUsersCount}</h3>
                 </div>
                 <FaUsers className="text-green-500 text-5xl" />
               </div>

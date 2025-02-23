@@ -50,8 +50,6 @@ export const userStats = async (req, res, next) => {
     const subscribedUsersCount = await User.countDocuments({
         'subscription.status': 'active',
     });
-
-    // console.log(allUseraccount, subscribedUsersCount);
     
     res.status(200).json({
         success: true,

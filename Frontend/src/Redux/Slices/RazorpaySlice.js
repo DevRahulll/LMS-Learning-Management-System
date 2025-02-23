@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { toast } from "react-hot-toast"
 import axiosInstance from "../../Helpers/axiosInstance"
-import axios from "axios";
+
 
 const initialState = {
     key: "",
@@ -24,23 +24,23 @@ export const getRazorPayId = createAsyncThunk("/razorpay/getId", async () => {
 export const purchasedCourseBundle = createAsyncThunk("/payments/purchaseCourse", async () => {
     try {
         const response = await axiosInstance.post("/payments/subscribe");
-        console.log("Reponse : ", response);
         return response.data
     } catch (error) {
         toast.error(error?.response?.data?.message)
     }
 });
 
-export const verifyUserPayment = createAsyncThunk("/payments/verify", async (data) => {
+export const verifyUserPayment = createAsyncThunk("/payments/verify", async (paymentDetail) => {
     try {
-        const response = await axiosInstance.post("/payments/verify", {
-            razorpay_payment_id: data.razorpay_payment_id,
-            razorpay_subscription_id: data.razorpay_subscription_id,
-            razorpay_signature: data.razorpay_signature
+        const res = await axiosInstance.post("/payments/verify", {
+            razorpay_payment_id: paymentDetail.razorpay_payment_id,
+            razorpay_subscription_id: paymentDetail.razorpay_subscription_id,
+            razorpay_signature: paymentDetail.razorpay_signature
         })
-        return response.data
+        return res?.data
     } catch (error) {
-        toast.error(error?.response?.data?.message)
+        
+        toast.error(error?.res?.data?.message || "Payment Verification failed")
     }
 });
 
@@ -48,18 +48,18 @@ export const getPaymentRecord = createAsyncThunk("/payments/record", async () =>
     try {
         const response = await axiosInstance.get("/payments?count=100");
 
-        toast.promise(response, {
-            laoding: "Getting the payment records",
+        toast.promise(Promise.resolve(response), {
+            loading: "Getting the payment records",
             success: (data) => {
-                return data?.data?.message
-            }
+                return data?.data?.message || "Payment record fetched successfully"
+            },
+            error: "Failed to get payments records"
         })
-        error: "Failed to get payments records"
-
-        return (await response).data
+        return (await response)?.data;
 
     } catch (error) {
-        toast.error(error?.response?.data?.message)
+        toast.error(error?.response?.data?.message||"Failed to fetch payment records");
+        throw error;
     }
 });
 
@@ -92,16 +92,15 @@ const razorpaySlice = createSlice({
                 state.key = action?.payload?.key;
             })
             .addCase(purchasedCourseBundle.fulfilled, (state, action) => {
-                console.log("State :  ", action.payload.subscription_id);
                 state.subscription_id = action?.payload?.subscription_id;
             })
             .addCase(verifyUserPayment.fulfilled, (state, action) => {
                 toast.success(action?.payload?.message)
-                state.isPaymentVerified = action?.payload?.success
+                state.isPaymentVerified = action?.payload?.success;
             })
             .addCase(verifyUserPayment.rejected, (state, action) => {
-                toast.success(action?.payload?.message)
-                state.isPaymentVerified = action?.payload?.success
+                toast.error(action?.payload?.message || "Payment verification failed");
+                state.isPaymentVerified = false;
             })
             .addCase(getPaymentRecord.fulfilled, (state, action) => {
                 state.allPayments = action?.payload?.allPayments;
