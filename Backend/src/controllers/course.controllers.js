@@ -265,7 +265,12 @@ export const deleteCourseById = async (req, res, next) => {
             return next(new AppError("Course with given id does not exist.", 404))
         }
 
-        await course.remove();
+        // Delete the course thumbnail from Cloudinary (if applicable)
+        if (course.thumbnail?.public_id) {
+            await cloudinary.v2.uploader.destroy(course.thumbnail.public_id);
+        }
+
+        await Course.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,

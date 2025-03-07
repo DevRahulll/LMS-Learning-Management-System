@@ -20,7 +20,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   const { allUseraccount, subscribedUsersCount } = useSelector((state) => state.stat);
-  console.log("Redux state: ",{allUseraccount, subscribedUsersCount });
+  // console.log("Redux state: ",{allUseraccount, subscribedUsersCount });
   const { allPayments, monthlySalesRecord } = useSelector((state) => state.razorpay);
 
   const userData = {
@@ -37,7 +37,7 @@ function AdminDashboard() {
     ]
   };
 
-  console.log("User data",userData); //debug
+  // console.log("User data",userData); //debug
 
   const SalesData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dev"],
@@ -53,29 +53,12 @@ function AdminDashboard() {
     ]
   };
 
-  const pieOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-        labels: {
-          color: "white", // Ensure legend labels are visible
-        },
-      },
-      title: {
-        display: true,
-        text: "User Statistics",
-        color: "white", // Ensure title is visible
-      },
-    },
-  };
-
   const myCourses = useSelector((state) => state?.course?.courseData);
 
   async function onCourseDelete(id) {
     if (window.confirm("Are you sure to Delete the course?")) {
       const res = await dispatch(deleteCourse(id));
-      // console.log(res);
+      // console.log("Response",res);
       if (res?.payload?.success) {
         await dispatch(getAllCourses());
       }
