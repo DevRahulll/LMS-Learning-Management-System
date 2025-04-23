@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BASE_URL="http://localhost:8000/api/v1";
+const BASE_URL="https://lms-learning-management-system-mntn.vercel.app/api/v1";
 
 const axiosInstance=axios.create();
 
