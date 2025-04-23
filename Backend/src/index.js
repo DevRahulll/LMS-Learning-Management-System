@@ -32,4 +32,4 @@ export const razorpay = new Razorpay({
 //     });
 // }
 
-// export default app;
+export default app;
