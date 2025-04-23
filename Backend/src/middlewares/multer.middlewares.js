@@ -10,12 +10,7 @@ if (!fs.existsSync(uploadFolder)) {
 
 const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB
-    storage: multer.diskStorage({
-        destination: uploadFolder,
-        filename: (_req, file, cb) => {
-            cb(null, file.originalname);
-        },
-    }),
+    storage: multer.memoryStorage(),
     fileFilter: (_req, file, cb) => {
         const ext = path.extname(file.originalname).toLowerCase();
         if (![".jpg", ".jpeg", ".webp", ".png", ".mp4"].includes(ext)) {
