@@ -3,10 +3,10 @@ import multer from "multer";
 import fs from "fs";
 
 // Ensure uploads folder exists
-const uploadFolder = "uploads";
-if (!fs.existsSync(uploadFolder)) {
-    fs.mkdirSync(uploadFolder);
-}
+// const uploadFolder = "uploads";
+// if (!fs.existsSync(uploadFolder)) {
+//     fs.mkdirSync(uploadFolder);
+// }
 
 const upload = multer({
     limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB
