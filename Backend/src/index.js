@@ -26,6 +26,9 @@ export const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_SECRET,
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}...`);
-})
+if (process.env.NODE_ENV !== "production") {
+    app.listen(3000, () => {
+      console.log("Server running on http://localhost:3000");
+    });
+  }
+  
