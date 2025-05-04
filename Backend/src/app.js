@@ -17,10 +17,12 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors({
-    origin: [process.env.FRONTEND_URI],
-    methods:['GET', 'POST', 'PUT', 'DELETE'],
+    origin: process.env.FRONTEND_URI, // Should be a specific origin, not array
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With','Accept'],
     credentials: true,
-}))
+    exposedHeaders: ['set-cookie']
+}));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
